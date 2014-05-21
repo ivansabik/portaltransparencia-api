@@ -1,0 +1,12 @@
+{
+    "require": {
+        "luracast/restler": "3.*@dev",
+        "ivansabik/dom-hunter": "dev-master"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/ivanrodriguez/dom-hunter"
+        }
+    ]
+}

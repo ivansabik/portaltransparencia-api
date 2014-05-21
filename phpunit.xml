@@ -1,0 +1,5 @@
+<phpunit bootstrap="./Tests/bootstrap.php" colors="true">
+    <testsuite name="POT API testing">
+        <directory>./Tests</directory>
+    </testsuite>
+</phpunit>
