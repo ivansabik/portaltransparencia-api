@@ -26,4 +26,9 @@ API del Portal de Transparencia Mx
 - Fecha de terminacion del contrato
 - Entidad federativa
 
+### TODO
+
+ - Permitir contrataciones, subsidios, concesiones y remuneraciones por nombre de la institucion
+
+
 ##### Fuente de la info: http://portaltransparencia.gob.mx/
