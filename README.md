@@ -2,29 +2,29 @@ API del Portal de Transparencia Mx
 ================
 [![Build Status](https://travis-ci.org/mexicapis/portaltransparencia-api.svg)](https://travis-ci.org/mexicapis/portaltransparencia-api)
 
-Para probar: http://api.mexicapis.org.mx/portaltransparencia/index.php/
+Para probar: http://mexicapis.org.mx/apis/portaltransparencia/index.php/
 
 ### Instituciones y sectores
 
 | Endpoint                                   | Ejemplo                              |
 | ------------------------------------------ | ------------------------------------ |
-| /instituciones                             | http://api.mexicapis.org.mx/portaltransparencia/index.php/instituciones                       |
-| /instituciones?nombre=[NOMBRE INSTITUCION] | http://api.mexicapis.org.mx/portaltransparencia/index.php/instituciones?nombre=casa+de+moneda |
-| /sectores                                  | http://api.mexicapis.org.mx/portaltransparencia/index.php/sectores                            |
+| /instituciones                             | http://mexicapis.org.mx/apis/portaltransparencia/index.php/instituciones                       |
+| /instituciones?nombre=[NOMBRE INSTITUCION] | http://mexicapis.org.mx/apis/portaltransparencia/index.php/instituciones?nombre=casa+de+moneda |
+| /sectores                                  | http://mexicapis.org.mx/apis/portaltransparencia/index.php/sectores                            |
 
 ### Contrataciones
 
 | Endpoint                                                                           | Ejemplo                                                       |
 | ---------------------------------------------------------------------------------- | ------------------------------------------------------------- |
-| /contrataciones?clave_institucion=[CLAVE INSTITUCION]                              | http://api.mexicapis.org.mx/portaltransparencia/index.php/consulta?tipo=contrataciones&institucion=06305               |
-| /contrataciones?clave_institucion=[CLAVE CONTRATO]&clave_contrato=[CLAVE CONTRATO] | http://api.mexicapis.org.mx/portaltransparencia/index.php/consulta?tipo=contrataciones&institucion=06305&contrato=1/12 |
+| /contrataciones?clave_institucion=[CLAVE INSTITUCION]                              | http://mexicapis.org.mx/apis/portaltransparencia/index.php/consulta?tipo=contrataciones&institucion=06305               |
+| /contrataciones?clave_institucion=[CLAVE CONTRATO]&clave_contrato=[CLAVE CONTRATO] | http://mexicapis.org.mx/apis/portaltransparencia/index.php/consulta?tipo=contrataciones&institucion=06305&contrato=1/12 |
 
 ### Remuneraciones
 
 | Endpoint                                                    | Ejemplo                                    |
 | ----------------------------------------------------------- | ------------------------------------------ |
-| /remuneraciones?clave_institucion=[CLAVE INSTITUCION]       | http://api.mexicapis.org.mx/portaltransparencia/index.php/contrataciones?clave_institucion=06305    |
-| /remuneraciones?clave_institucion=[NOMBRE INSTITUCION]      | http://api.mexicapis.org.mx/portaltransparencia/index.php/contrataciones?nombre_institucion=hacienda |
+| /remuneraciones?clave_institucion=[CLAVE INSTITUCION]       | http://mexicapis.org.mx/apis/portaltransparencia/index.php/contrataciones?clave_institucion=06305    |
+| /remuneraciones?clave_institucion=[NOMBRE INSTITUCION]      | http://mexicapis.org.mx/apis/portaltransparencia/index.php/contrataciones?nombre_institucion=hacienda |
 
 ### Deployea tu copia
 
