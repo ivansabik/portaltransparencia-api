@@ -11,10 +11,16 @@ define('URL_CONTRATO', 'http://portaltransparencia.gob.mx/pot/contrataciones/con
 require 'vendor/autoload.php';
 
 class PortalTransparencia {
+
+    private static $errores = array(
+        1 => array('mensaje_error' => 'Falta el parametro "clave_institucion"', 'error' => 1),
+        2 => array('mensaje_error' => 'Falta el parametro "clave_institucion" o "nombre_institucion"', 'error' => 2)
+    );
+
     # Endpoint de instituciones
 
     public function instituciones($nombre = NULL) {
-        if (nombre) {
+        if ($nombre) {
             return $this->buscar_institucion($nombre);
         }
         return $this->buscar_instituciones();
@@ -30,7 +36,7 @@ class PortalTransparencia {
 
     public function contrataciones($clave_institucion = NULL, $clave_contrato = NULL) {
         if (!$clave_institucion) {
-            return array('mensaje_error' => 'Falta el parametro "clave_institucion"', 'error' => 1);
+            return self::$errores[1];
         }
         # Listar contrataciones de una institucion o una especifica
         if ($clave_contrato) {
@@ -42,8 +48,11 @@ class PortalTransparencia {
 
     # Endpoint de /remuneraciones
 
-    public function remuneraciones() {
-        return $this->buscar_remuneraciones($institucion);
+    public function remuneraciones($clave_institucion = NULL, $nombre_institucion = NULL) {
+        if (!$clave_institucion && !$nombre_institucion) {
+            return self::$errores[2];
+        }
+        return $this->buscar_remuneraciones($clave_institucion);
     }
 
     # Metodos que hacen todo
@@ -51,7 +60,7 @@ class PortalTransparencia {
     private function buscar_instituciones() {
         $hunter = new \Ivansabik\DomHunter\DomHunter(URL_INSTITUCIONES);
         $presas = array();
-        $presas[] = array('instituciones', new \Ivansabik\DomHunter\SelectOptions(array('id_nodo' => 'comboDependencia'), 'id_institucion', 'nombre_institucion', 1));
+        $presas[] = array('instituciones', new \Ivansabik\DomHunter\SelectOptions(array('id_nodo' => 'comboDependencia'), 'clave_institucion', 'nombre_institucion', 1));
         $hunter->arrPresas = $presas;
         $hunted = $hunter->hunt();
         return $hunted['instituciones'];
@@ -60,7 +69,7 @@ class PortalTransparencia {
     private function buscar_sectores() {
         $hunter = new \Ivansabik\DomHunter\DomHunter(URL_SECTORES);
         $presas = array();
-        $presas[] = array('sectores', new \Ivansabik\DomHunter\SelectOptions(array('id_nodo' => 'idSector'), 'id_sector', 'nombre_sector', 1));
+        $presas[] = array('sectores', new \Ivansabik\DomHunter\SelectOptions(array('id_nodo' => 'idSector'), 'clave_sector', 'nombre_sector', 1));
         $hunter->arrPresas = $presas;
         $hunted = $hunter->hunt();
         return $hunted['sectores'];
