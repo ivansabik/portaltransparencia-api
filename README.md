@@ -17,7 +17,7 @@ Para probar: http://mexicapis.org.mx/apis/portaltransparencia/
 | Endpoint                                                                           | Ejemplo                                                       |
 | ---------------------------------------------------------------------------------- | ------------------------------------------------------------- |
 | /contrataciones?clave_institucion=[CLAVE INSTITUCION]                              | http://mexicapis.org.mx/apis/portaltransparencia/contrataciones?clave_institucion=06305               |
-| /contrataciones?clave_institucion=[CLAVE CONTRATO]&clave_contrato=[CLAVE CONTRATO] | http://mexicapis.org.mx/apis/portaltransparencia/contrataciones?clave_institucion=06305&clavecontrato=1/12 |
+| /contrataciones?clave_institucion=[CLAVE CONTRATO]&clave_contrato=[CLAVE CONTRATO] | http://mexicapis.org.mx/apis/portaltransparencia/contrataciones?clave_institucion=06305&clave_contrato=1/12 |
 
 ### Remuneraciones
 
