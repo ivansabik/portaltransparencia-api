@@ -11,81 +11,42 @@ define('URL_CONTRATO', 'http://portaltransparencia.gob.mx/pot/contrataciones/con
 require 'vendor/autoload.php';
 
 class PortalTransparencia {
-    # Endpoint de /listado?tipo=sectores,
-    # Endpoint de /listado?tipo=instituciones
-    # Endpoint de /listado?tipo=areas
+    # Endpoint de instituciones
 
-    public function listado($tipo = NULL) {
-        if (!$tipo) {
-            return array('mensaje_error' => 'Falta el parametro "tipo"', 'error' => 1);
+    public function instituciones($nombre = NULL) {
+        if (nombre) {
+            return $this->buscar_institucion($nombre);
         }
-        if ($tipo == 'sectores') {
-            return $this->buscar_sectores();
-        } elseif ($tipo == 'instituciones') {
-            return $this->buscar_instituciones();
-        } elseif ($tipo == 'areas') {
-            return 'Falta implementierung! X_X';
+        return $this->buscar_instituciones();
+    }
+
+    # Endpoint de sectores
+
+    public function sectores() {
+        return $this->buscar_sectores();
+    }
+
+    # Endpoint de /contrataciones
+
+    public function contrataciones($clave_institucion = NULL, $clave_contrato = NULL) {
+        if (!$clave_institucion) {
+            return array('mensaje_error' => 'Falta el parametro "clave_institucion"', 'error' => 1);
+        }
+        # Listar contrataciones de una institucion o una especifica
+        if ($clave_contrato) {
+            return $this->buscar_contratacion($clave_institucion, $clave_contrato);
         } else {
-            return array('mensaje_error' => '"tipo" es invalido', 'error' => 2);
+            return $this->buscar_contrataciones($clave_institucion);
         }
     }
 
-    # Endpoint de /consulta?tipo=contrataciones
-    # Endpoint de /consulta?tipo=concesiones
-    # Endpoint de /consulta?tipo=subsidios
-    # Endpoint de /consulta?tipo=remuneraciones
+    # Endpoint de /remuneraciones
 
-    public function consulta($tipo = NULL, $institucion = NULL, $contrato = NULL) {
-        if (!$tipo) {
-            return array('mensaje_error' => 'Falta el parametro "tipo"', 'error' => 3);
-        }
-        if (!$institucion) {
-            return array('mensaje_error' => 'Falta el parametro "institucion"', 'error' => 4);
-        }
-        # Busca ID institucion para cuando da el nombre no el ID de la H inst
-        if (!preg_match("/[0-9]{5}/", $institucion)) {
-            $institucion = $this->buscar_id_institucion();
-        }
-        if ($tipo == 'contrataciones') {
-            # Listar contrataciones de una institucion
-            if ($contrato) {
-                return $this->buscar_contratacion($institucion, $contrato);
-            } else {
-                return $this->buscar_contrataciones($institucion);
-            }
-            # Listar contracacion especifica
-        } elseif ($tipo == 'concesiones') {
-            return 'Falta implementierung! X_X';
-        } elseif ($tipo == 'subsidios') {
-            return 'Falta implementierung! X_X';
-        } elseif ($tipo == 'remuneraciones') {
-            return $this->buscar_remuneraciones($institucion);
-        } else {
-            return array('mensaje_error' => '"tipo" es invalido', 'error' => 5);
-        }
+    public function remuneraciones() {
+        return $this->buscar_remuneraciones($institucion);
     }
 
-    # Endpoint de /busqueda?tipo=contrataciones
-    # Endpoint de /busqueda?tipo=concesiones
-    # Endpoint de /busqueda?tipo=subsidios
-    # Endpoint de /busqueda?tipo=remuneraciones
-
-    public function busqueda($tipo = NULL) {
-        if (!$tipo) {
-            return array('mensaje_error' => 'Falta el parametro "tipo"', 'error' => 6);
-        }
-        if ($tipo == 'contrataciones') {
-            return 'Falta implementierung! X_X';
-        } elseif ($tipo == 'concesiones') {
-            return 'Falta implementierung! X_X';
-        } elseif ($tipo == 'subsidios') {
-            return 'Falta implementierung! X_X';
-        } elseif ($tipo == 'remuneraciones') {
-            return 'Falta implementierung! X_X';
-        } else {
-            return 'Falta implementierung! X_X';
-        }
-    }
+    # Metodos que hacen todo
 
     private function buscar_instituciones() {
         $hunter = new \Ivansabik\DomHunter\DomHunter(URL_INSTITUCIONES);
@@ -108,18 +69,19 @@ class PortalTransparencia {
     private function buscar_contrataciones($id_institucion) {
         $hunter = new \Ivansabik\DomHunter\DomHunter(URL_CONTRATACIONES . $id_institucion);
         $presas = array();
+        $presas[] = array('nombre_institucion', new \Ivansabik\DomHunter\NodoDom(array('find' => '.style10'), 'plaintext'));
         $columnas = array('clave', 'procedimiento', 'asignado', 'fecha', 'objeto', 'monto', 'modificatorio');
         $presas[] = array('contrataciones', new \Ivansabik\DomHunter\Tabla(array('id_nodo' => 'contratoLista'), $columnas));
         $hunter->arrPresas = $presas;
         $hunted = $hunter->hunt();
+        $hunted['clave_institucion'] = $id_institucion;
         $contrataciones = $hunted['contrataciones'];
-
         for ($i = 0; $i < count($contrataciones); $i++) {
             $contrataciones[$i]['url_info'] = URL_CONTRATO . '&id.idContrato=' . $contrataciones[$i]['clave'] . '&_idDependencia=' . $id_institucion;
             $contrataciones[$i]['url_api'] = 'consulta?tipo=contrataciones&institucion=' . $id_institucion . '&contrato=' . $contrataciones[$i]['clave'];
         }
-
-        return $contrataciones;
+        $hunted['contrataciones'] = $contrataciones;
+        return $hunted;
     }
 
     private function buscar_remuneraciones($id_institucion) {
@@ -133,8 +95,10 @@ class PortalTransparencia {
     }
 
     private function buscar_contratacion($id_institucion, $id_contrato) {
-        $hunter = new \Ivansabik\DomHunter\DomHunter(URL_CONTRATO . '&id.idContrato=' . $id_contrato . '&_idDependencia=' . $id_institucion);
+        $curl_target = URL_CONTRATO . '&id.idContrato=' . $id_contrato . '&_idDependencia=' . $id_institucion;
+        $hunter = new \Ivansabik\DomHunter\DomHunter($curl_target);
         $presas = array();
+        $presas[] = array('nombre_institucion', new \Ivansabik\DomHunter\NodoDom(array('find' => '.style10'), 'plaintext'));
         $presas[] = array('sector_presupuestal', new \Ivansabik\DomHunter\KeyValue('SECTOR PRESUPUESTAL'));
         $presas[] = array('siglas', new \Ivansabik\DomHunter\KeyValue('SIGLAS'));
         $presas[] = array('fecha_actualizacion', new \Ivansabik\DomHunter\KeyValue('ltima fecha de actualizaci'));
@@ -151,10 +115,12 @@ class PortalTransparencia {
         $presas[] = array('documento', new \Ivansabik\DomHunter\KeyValue('Documento del Contrato'));
         $hunter->arrPresas = $presas;
         $hunted = $hunter->hunt();
+        $hunted['clave_institucion'] = $id_institucion;
+        $hunted['url_info'] = $curl_target;
         return $hunted;
     }
 
-    private function buscar_id_institucion() {
+    private function buscar_institucion($nombre) {
         return 'Falta implementierung! X_X';
     }
 
