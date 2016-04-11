@@ -88,21 +88,13 @@ class PortalTransparencia {
         for ($i = 0; $i < count($contrataciones); $i++) {
             $contrataciones[$i]['url_info'] = URL_CONTRATO . '&id.idContrato=' . $contrataciones[$i]['clave'] . '&_idDependencia=' . $id_institucion;
             $contrataciones[$i]['url_api'] = 'consulta?tipo=contrataciones&institucion=' . $id_institucion . '&contrato=' . $contrataciones[$i]['clave'];
+            $monto = (double)str_replace(',', '', $contrataciones[$i]['monto']);
+            $contrataciones[$i]['monto'] = $monto;
         }
         $hunted['contrataciones'] = $contrataciones;
         return $hunted;
     }
-
-    private function buscar_remuneraciones($id_institucion) {
-        $hunter = new \Ivansabik\DomHunter\DomHunter(URL_REMUNERACIONES . $id_institucion);
-        $presas = array();
-        $columnas = array('clave_puesto', 'nombre_puesto', 'tipo_personal', 'remuneracion_bruta', 'remuneracion_neta', 'moneda');
-        $presas[] = array('remuneraciones', new \Ivansabik\DomHunter\Tabla(array('id_nodo' => 'puestos'), $columnas));
-        $hunter->arrPresas = $presas;
-        $hunted = $hunter->hunt();
-        return $hunted['remuneraciones'];
-    }
-
+    
     private function buscar_contratacion($id_institucion, $id_contrato) {
         $curl_target = URL_CONTRATO . '&id.idContrato=' . $id_contrato . '&_idDependencia=' . $id_institucion;
         $hunter = new \Ivansabik\DomHunter\DomHunter($curl_target);
@@ -126,6 +118,9 @@ class PortalTransparencia {
         $hunted = $hunter->hunt();
         $hunted['clave_institucion'] = $id_institucion;
         $hunted['url_info'] = $curl_target;
+        $monto = (double)str_replace('$', '', $hunted['monto_contrato']);
+        $monto = (double)str_replace(',', '', $monto);
+        $hunted['monto_contrato'] = $monto;
         return $hunted;
     }
 
