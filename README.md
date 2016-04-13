@@ -82,7 +82,7 @@ API del Portal de Transparencia Mx
       "asignado": "PRODUCTIVI...",
       "fecha": "02/07/2012",
       "objeto": "SERVICIOS ...",
-      "monto": 69,900,
+      "monto": 69900,
       "modificatorio": "NO",
       "url_info": "http://portaltransparencia.gob.mx/pot/contrataciones/consultarContrato.do?method=consultaContrato&id.idContrato=20120214&_idDependencia=06305",
       "url_api": "consulta?tipo=contrataciones&institucion=06305&contrato=20120214"
