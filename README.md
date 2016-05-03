@@ -133,3 +133,7 @@ php -S localhost:8000
  - Búsque de institución por nombre
 
 Fuente de la info: http://portaltransparencia.gob.mx/
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/ivansabik/portaltransparencia-api/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
